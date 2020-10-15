@@ -140,9 +140,20 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  let keysString = ``;
+  let valuesArray = [];
+  let valuesIndex = ``;
+  let counter = 1;
+  for (key in property) {
+    keysString += `${key}, `;
+    valuesArray.push(property[key]);
+    valuesIndex += `$${counter}, `;
+    counter++;
+  }
+  keysString = keysString.slice(0, keysString.length - 2);
+  valuesIndex = valuesIndex.slice(0, valuesIndex.length - 2);
+  const queryString =`
+    INSERT INTO properties (${keysString}) VALUES (${valuesIndex}) RETURNING *;`;
+  return pool.query(queryString, valuesArray).then((res) => res.rows);
 }
 exports.addProperty = addProperty;
