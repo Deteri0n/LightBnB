@@ -23,7 +23,7 @@ const apiRouter = express.Router();
 apiRoutes(apiRouter, database);
 app.use('/api', apiRouter);
 
-// /user/endpoints
+// /users/endpoints
 const userRouter = express.Router();
 userRoutes(userRouter, database);
 app.use('/users', userRouter);
